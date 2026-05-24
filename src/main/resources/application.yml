@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: smartcart-ai
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/smartcart}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Custom Security JWT configurations
+app:
+  jwt:
+    secret: ${JWT_SECRET:9a4f2c8d3e7b1a5c6d8e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c} # 256-bit hex minimum for HS256
+    expiration-ms: 86400000 # 24 hours
+    header: Authorization
+    prefix: "Bearer "
+
+# Springdoc OpenAPI configs
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  paths-to-match: /api/**
