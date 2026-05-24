@@ -48,6 +48,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Lombok for Boilerplate reduction -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
         <!-- JWT Authentication (Auth0 or JJWT - using JJWT) -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
