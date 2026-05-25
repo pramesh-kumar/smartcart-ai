@@ -47,4 +47,15 @@ public class AuthController {
         AuthResponseDto tokenResponse = authService.login(loginDto);
         return ResponseEntity.ok(tokenResponse);
     }
+
+    @org.springframework.web.bind.annotation.GetMapping("/me")
+    @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Get current user profile", description = "Retrieves user identity metadata matching the parsed JWT context.")
+    @ApiResponse(responseCode = "200", description = "Successful retrieval")
+    @ApiResponse(responseCode = "401", description = "Token is missing or invalid")
+    public ResponseEntity<com.smartcart.api.domain.auth.dto.UserProfileResponseDto> getMyProfile(org.springframework.security.core.Authentication authentication) {
+        String email = authentication.getName();
+        com.smartcart.api.domain.auth.dto.UserProfileResponseDto profile = authService.getProfile(email);
+        return ResponseEntity.ok(profile);
+    }
 }

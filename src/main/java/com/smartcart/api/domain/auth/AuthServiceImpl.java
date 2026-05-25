@@ -77,4 +77,23 @@ public class AuthServiceImpl implements AuthService {
                 .accessToken(jwt)
                 .build();
     }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public com.smartcart.api.domain.auth.dto.UserProfileResponseDto getProfile(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+        java.util.Set<String> roleNames = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(java.util.stream.Collectors.toSet());
+
+        return com.smartcart.api.domain.auth.dto.UserProfileResponseDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .roles(roleNames)
+                .build();
+    }
 }
