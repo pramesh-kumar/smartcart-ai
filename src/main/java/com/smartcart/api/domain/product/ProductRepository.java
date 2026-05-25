@@ -19,12 +19,18 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     
     Boolean existsBySlug(String slug);
 
-    // Advanced dynamic search query mapping both keyword matching and category filtering
+    @Query("SELECT p FROM Product p JOIN FETCH p.category WHERE " +
+           "(:categoryId IS NULL OR p.category.id = :categoryId)")
+    Page<Product> searchProductsWithoutKeyword(
+            @Param("categoryId") UUID categoryId,
+            Pageable pageable
+    );
+
     @Query("SELECT p FROM Product p JOIN FETCH p.category WHERE " +
            "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
-           "(:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "(LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-    Page<Product> searchProducts(
+    Page<Product> searchProductsWithKeyword(
             @Param("categoryId") UUID categoryId,
             @Param("keyword") String keyword,
             Pageable pageable

@@ -124,7 +124,13 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        Page<Product> productsPage = productRepository.searchProducts(categoryId, keyword, pageable);
+        
+        Page<Product> productsPage;
+        if (keyword == null || keyword.trim().isEmpty()) {
+            productsPage = productRepository.searchProductsWithoutKeyword(categoryId, pageable);
+        } else {
+            productsPage = productRepository.searchProductsWithKeyword(categoryId, keyword.trim(), pageable);
+        }
         
         return productsPage.map(this::mapToResponseDto);
     }
